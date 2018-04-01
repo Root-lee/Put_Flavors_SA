@@ -1,14 +1,14 @@
 #include "Server.h"
 
-///Server¹¹Ôìº¯Êı£¬²ÎÊıÎªÄÚ´æ´óĞ¡ºÍCPU´óĞ¡
+///Serveræ„é€ å‡½æ•°ï¼Œå‚æ•°ä¸ºå†…å­˜å¤§å°å’ŒCPUå¤§å°
 Server::Server(int mem, int cpu) :total_mem(mem), total_cpu(cpu) {
-	free_cpu = cpu;  //³õÊ¼»¯Ê±Ê£ÓàCPUµÈÓÚ×ÜCPU
-	free_mem = mem;  //³õÊ¼»¯Ê±Ê£ÓàÄÚ´æµÈÓÚ×ÜÄÚ´æ
+	free_cpu = cpu;  //åˆå§‹åŒ–æ—¶å‰©ä½™CPUç­‰äºæ€»CPU
+	free_mem = mem;  //åˆå§‹åŒ–æ—¶å‰©ä½™å†…å­˜ç­‰äºæ€»å†…å­˜
 }
-///·ÅÖÃĞéÄâ»úº¯Êı£¬²ÎÊıÎªĞéÄâ»ú¶ÔÏó£¬·µ»ØÖµÎªÊÇ·ñ·ÅÖÃ³É¹¦
-///Ê×ÏÈ¼ì²éÊ£ÓàCPUºÍÄÚ´æÊÇ·ñ×ã¹»·ÅÖÃ¸ÃĞéÄâ»ú
-///Èç¹ûÄÜ¹»·ÅÏÂĞéÄâ»ú£¬Ôò½«ĞéÄâ»ú·ÅÈë·şÎñÆ÷£¬²¢¸üĞÂ·şÎñÆ÷¿ÉÓÃÄÚ´æºÍ¿ÉÓÃCPU£¬²¢·µ»Øtrue
-///Èç¹ûÊ£ÓàÄÚ´æºÍCPU²»×ãÒÔ·ÅÏÂ¸ÃĞéÄâ»ú£¬Ôò·µ»Øfalse
+///æ”¾ç½®è™šæ‹Ÿæœºå‡½æ•°ï¼Œå‚æ•°ä¸ºè™šæ‹Ÿæœºå¯¹è±¡ï¼Œè¿”å›å€¼ä¸ºæ˜¯å¦æ”¾ç½®æˆåŠŸ
+///é¦–å…ˆæ£€æŸ¥å‰©ä½™CPUå’Œå†…å­˜æ˜¯å¦è¶³å¤Ÿæ”¾ç½®è¯¥è™šæ‹Ÿæœº
+///å¦‚æœèƒ½å¤Ÿæ”¾ä¸‹è™šæ‹Ÿæœºï¼Œåˆ™å°†è™šæ‹Ÿæœºæ”¾å…¥æœåŠ¡å™¨ï¼Œå¹¶æ›´æ–°æœåŠ¡å™¨å¯ç”¨å†…å­˜å’Œå¯ç”¨CPUï¼Œå¹¶è¿”å›true
+///å¦‚æœå‰©ä½™å†…å­˜å’ŒCPUä¸è¶³ä»¥æ”¾ä¸‹è¯¥è™šæ‹Ÿæœºï¼Œåˆ™è¿”å›false
 bool Server::put_flavor(Flavor flavor) {
 	if (free_cpu >= flavor.cpu && free_mem >= flavor.mem) {
 		free_cpu -= flavor.cpu;
@@ -19,11 +19,11 @@ bool Server::put_flavor(Flavor flavor) {
 	return false;
 }
 
-///»ñÈ¡·şÎñÆ÷CPUÊ¹ÓÃÂÊ
+///è·å–æœåŠ¡å™¨CPUä½¿ç”¨ç‡
 double Server::get_cpu_usage_rate() {
-	return free_cpu / static_cast<double>(total_cpu);
+	return 1 ï¼ free_cpu / static_cast<double>(total_cpu);
 }
-///»ñÈ¡·şÎñÆ÷ÄÚ´æÊ¹ÓÃÂÊ
+///è·å–æœåŠ¡å™¨å†…å­˜ä½¿ç”¨ç‡
 double Server::get_mem_usage_rate() {
-	return free_mem / static_cast<double>(total_mem);
+	return 1 ï¼ free_mem / static_cast<double>(total_mem);
 }
