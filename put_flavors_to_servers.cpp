@@ -5,57 +5,57 @@
 #include <algorithm>
 #include <iostream>
 
-//Èç¹û¹ØĞÄµÄ×ÊÔ´ÊÇCPUÔòÎªtrue£¬Èç¹û¹ØĞÄµÄ×ÊÔ´ÊÇÄÚ´æÔòÎªFalse
+//å¦‚æœå…³å¿ƒçš„èµ„æºæ˜¯CPUåˆ™ä¸ºtrueï¼Œå¦‚æœå…³å¿ƒçš„èµ„æºæ˜¯å†…å­˜åˆ™ä¸ºFalse
 #define CPU true 
 #define MEM false
 
 using namespace std;
 
-///Ê¹ÓÃÄ£ÄâÍË»ğËã·¨ÕÒ×î¼ÑµÄĞéÄâ»ú·ÅÖÃ·½Ê½
-///ÊäÈë²ÎÊı£º
-///map_predict_num_flavors£ºÉÏÒ»²½Ô¤²â³öÀ´µÄ¸÷ÖÖĞéÄâ»úÊıÁ¿£¬keyÊÇĞéÄâ»úÃû³Æ£¬valueÊÇĞéÄâ»úÊıÁ¿
-///map_flavor_cpu_mem£º³ÌĞòÊäÈëµÄĞéÄâ»úÀàĞÍÊı¾İ£¬keyÎªĞéÄâ»úÃû³Æ£¬valueÊÇĞéÄâ»úÀàĞÍ£¨°üÀ¨name£¬cpu£¬mem×Ö¶Î£©
-///server_mem && server_cpu£º³ÌĞòÊäÈëµÄ·şÎñÆ÷²ÎÊı£¬CPUºÍÄÚ´æ´óĞ¡
-///CPUorMEM£ºÊÇÊ¹CPUÀûÓÃÂÊ×î¸ß»¹ÊÇÊ¹ÄÚ´æÀûÓÃÂÊ×î¸ß
-///Êä³ö²ÎÊı£º
-///res_servers£º´æ·ÅÓĞ¼ÆËã³öµÄ×îÓÅ·şÎñÆ÷ÖĞĞéÄâ»ú´æ·Å·½Ê½£¬¿ÉÍ¨¹ı³ÉÔ±flavors·ÃÎÊÃ¿¸ö·şÎñÆ÷ÖĞ´æ·ÅµÄĞéÄâ»ú
+///ä½¿ç”¨æ¨¡æ‹Ÿé€€ç«ç®—æ³•æ‰¾æœ€ä½³çš„è™šæ‹Ÿæœºæ”¾ç½®æ–¹å¼
+///è¾“å…¥å‚æ•°ï¼š
+///map_predict_num_flavorsï¼šä¸Šä¸€æ­¥é¢„æµ‹å‡ºæ¥çš„å„ç§è™šæ‹Ÿæœºæ•°é‡ï¼Œkeyæ˜¯è™šæ‹Ÿæœºåç§°ï¼Œvalueæ˜¯è™šæ‹Ÿæœºæ•°é‡
+///map_flavor_cpu_memï¼šç¨‹åºè¾“å…¥çš„è™šæ‹Ÿæœºç±»å‹æ•°æ®ï¼Œkeyä¸ºè™šæ‹Ÿæœºåç§°ï¼Œvalueæ˜¯è™šæ‹Ÿæœºç±»å‹ï¼ˆåŒ…æ‹¬nameï¼Œcpuï¼Œmemå­—æ®µï¼‰
+///server_mem && server_cpuï¼šç¨‹åºè¾“å…¥çš„æœåŠ¡å™¨å‚æ•°ï¼ŒCPUå’Œå†…å­˜å¤§å°
+///CPUorMEMï¼šæ˜¯ä½¿CPUåˆ©ç”¨ç‡æœ€é«˜è¿˜æ˜¯ä½¿å†…å­˜åˆ©ç”¨ç‡æœ€é«˜
+///è¾“å‡ºå‚æ•°ï¼š
+///res_serversï¼šå­˜æ”¾æœ‰è®¡ç®—å‡ºçš„æœ€ä¼˜æœåŠ¡å™¨ä¸­è™šæ‹Ÿæœºå­˜æ”¾æ–¹å¼ï¼Œå¯é€šè¿‡æˆå‘˜flavorsè®¿é—®æ¯ä¸ªæœåŠ¡å™¨ä¸­å­˜æ”¾çš„è™šæ‹Ÿæœº
 vector<Server> put_flavors_to_servers(unordered_map<string, int> map_predict_num_flavors, 
 	unordered_map<string, Flavor> map_flavor_cpu_mem,int server_mem, int server_cpu, bool CPUorMEM) {
 
-	vector<Flavor> vec_flavors;    //vectorÓÃÓÚ´æ·ÅËùÓĞÔ¤²â³öÀ´µÄflavor
+	vector<Flavor> vec_flavors;    //vectorç”¨äºå­˜æ”¾æ‰€æœ‰é¢„æµ‹å‡ºæ¥çš„flavor
 	for (auto element : map_predict_num_flavors) {
-		//½«Ô¤²â³öÀ´µÄËùÓĞĞéÄâ»ú¶¼¼ÓÈëµ½vec_flavorsÖĞ
+		//å°†é¢„æµ‹å‡ºæ¥çš„æ‰€æœ‰è™šæ‹Ÿæœºéƒ½åŠ å…¥åˆ°vec_flavorsä¸­
 		while (element.second-- != 0) {
 			vec_flavors.push_back(map_flavor_cpu_mem[element.first]);
 		}
 	}
 
 	//=========================================================================
-	//Ä£ÄâÍË»ğËã·¨ÕÒ×îÓÅ½â
+	//æ¨¡æ‹Ÿé€€ç«ç®—æ³•æ‰¾æœ€ä¼˜è§£
 	double min_server = vec_flavors.size() + 1;
-	vector<Server> res_servers;  //ÓÃÓÚ´æ·Å×îºÃ½á¹û£¨·şÎñÆ÷Ê¹ÓÃÊıÁ¿×îÉÙ£©
-	double T = 100.0;  //Ä£ÄâÍË»ğ³õÊ¼ÎÂ¶È
-	double Tmin = 1;   //Ä£ÄâÍË»ğÖÕÖ¹ÎÂ¶È
-	double r = 0.9999; //ÎÂ¶ÈÏÂ½µÏµÊı
-	vector<int> dice;  //÷»×Ó£¬Ã¿´ÎËæ»úÍ¶ÖÀ£¬È¡vectorÇ°Á½¸ö±äÁ¿×÷ÎªÃ¿´ÎÍË»ğĞèÒª½»»»Ë³ĞòµÄĞéÄâ»ú
+	vector<Server> res_servers;  //ç”¨äºå­˜æ”¾æœ€å¥½ç»“æœï¼ˆæœåŠ¡å™¨ä½¿ç”¨æ•°é‡æœ€å°‘ï¼‰
+	double T = 100.0;  //æ¨¡æ‹Ÿé€€ç«åˆå§‹æ¸©åº¦
+	double Tmin = 1;   //æ¨¡æ‹Ÿé€€ç«ç»ˆæ­¢æ¸©åº¦
+	double r = 0.9999; //æ¸©åº¦ä¸‹é™ç³»æ•°
+	vector<int> dice;  //éª°å­ï¼Œæ¯æ¬¡éšæœºæŠ•æ·ï¼Œå–vectorå‰ä¸¤ä¸ªå˜é‡ä½œä¸ºæ¯æ¬¡é€€ç«éœ€è¦äº¤æ¢é¡ºåºçš„è™šæ‹Ÿæœº
 	for (int i = 0; i < vec_flavors.size(); i++) {
 		dice.push_back(i);
 	}
 	while (T > Tmin) {
-		//Í¶ÖÀ÷»×Ó£¬ÈçvectorÇ°Á½¸öÊıÎª3ºÍ9£¬Ôò°Ñvec_flavors[3]ºÍvec_flavors[9]½øĞĞ½»»»×÷ÎªĞÂµÄflavorsË³Ğò
+		//æŠ•æ·éª°å­ï¼Œå¦‚vectorå‰ä¸¤ä¸ªæ•°ä¸º3å’Œ9ï¼Œåˆ™æŠŠvec_flavors[3]å’Œvec_flavors[9]è¿›è¡Œäº¤æ¢ä½œä¸ºæ–°çš„flavorsé¡ºåº
 		std::random_shuffle(dice.begin(), dice.end());
 		auto new_vec_flavors = vec_flavors;
 		std::swap(new_vec_flavors[dice[0]], new_vec_flavors[dice[1]]);
 
-		//°ÑÉÏÒ»²½¼ÆËã³öÀ´µÄĞéÄâ»ú³¢ÊÔ¼ÓÈëµ½·şÎñÆ÷ÖĞ
+		//æŠŠä¸Šä¸€æ­¥è®¡ç®—å‡ºæ¥çš„è™šæ‹Ÿæœºå°è¯•åŠ å…¥åˆ°æœåŠ¡å™¨ä¸­
 
-		//ÏÈÊ¹ÓÃÒ»¸ö·şÎñÆ÷ÓÃÓÚ·ÅÖÃĞéÄâ»ú
+		//å…ˆä½¿ç”¨ä¸€ä¸ªæœåŠ¡å™¨ç”¨äºæ”¾ç½®è™šæ‹Ÿæœº
 		vector<Server> servers;
 		Server firstserver(server_mem, server_cpu);
 		servers.push_back(firstserver);  
 		
-		//·ÅÖÃĞéÄâ»úÖ÷ÒªÂß¼­
-		//Èç¹ûµ±Ç°ËùÓĞ·şÎñÆ÷¶¼·Å²»ÏÂĞéÄâ»ú£¬¾ÍĞÂ½¨Ò»¸ö·şÎñÆ÷ÓÃÓÚ´æ·Å
+		//æ”¾ç½®è™šæ‹Ÿæœºä¸»è¦é€»è¾‘
+		//å¦‚æœå½“å‰æ‰€æœ‰æœåŠ¡å™¨éƒ½æ”¾ä¸ä¸‹è™šæ‹Ÿæœºï¼Œå°±æ–°å»ºä¸€ä¸ªæœåŠ¡å™¨ç”¨äºå­˜æ”¾
 		for (auto element : new_vec_flavors) {
 			auto iter = servers.begin();
 			for (; iter != servers.end(); ++iter) {
@@ -70,22 +70,22 @@ vector<Server> put_flavors_to_servers(unordered_map<string, int> map_predict_num
 			}
 		}
 
-		//¼ÆËã±¾´Î·ÅÖÃĞéÄâ»úºÄ·Ñ·şÎñÆ÷ÆÀ¼Û·ÖÊı(doubleĞÍ)
-		//Èç¹ûÊ¹ÓÃÁËN¸ö·şÎñÆ÷£¬ÔòÇ°N-1¸ö·şÎñÆ÷¹±Ï×·ÖÊıÎª1£¬µÚN¸ö·şÎñÆ÷·ÖÊıÎª×ÊÔ´ÀûÓÃÂÊ
-		//Ä£ÄâÍË»ğ¾ÍÊÇµÃµ½È¡µÃ·ÖÊı×îĞ¡µÄ·ÅÖÃ·½Ê½
+		//è®¡ç®—æœ¬æ¬¡æ”¾ç½®è™šæ‹Ÿæœºè€—è´¹æœåŠ¡å™¨è¯„ä»·åˆ†æ•°(doubleå‹)
+		//å¦‚æœä½¿ç”¨äº†Nä¸ªæœåŠ¡å™¨ï¼Œåˆ™å‰N-1ä¸ªæœåŠ¡å™¨è´¡çŒ®åˆ†æ•°ä¸º1ï¼Œç¬¬Nä¸ªæœåŠ¡å™¨åˆ†æ•°ä¸ºèµ„æºåˆ©ç”¨ç‡
+		//æ¨¡æ‹Ÿé€€ç«å°±æ˜¯å¾—åˆ°å–å¾—åˆ†æ•°æœ€å°çš„æ”¾ç½®æ–¹å¼
 		double server_num;
-		//¶ÔÓÚÌâÄ¿¹ØĞÄCPU»¹ÊÇMEM£¬ĞèÒª·Ö¿ªÌÖÂÛ£¬×ÊÔ´ÀûÓÃÂÊ¼ÆËã·½·¨²»Í¬
+		//å¯¹äºé¢˜ç›®å…³å¿ƒCPUè¿˜æ˜¯MEMï¼Œéœ€è¦åˆ†å¼€è®¨è®ºï¼Œèµ„æºåˆ©ç”¨ç‡è®¡ç®—æ–¹æ³•ä¸åŒ
 		if (CPUorMEM == CPU)
 			server_num = servers.size() - 1 + servers.rbegin()->get_cpu_usage_rate();
 		else
 			server_num = servers.size() - 1 + servers.rbegin()->get_mem_usage_rate();
-		//Èç¹û·ÖÊı¸üµÍ£¬Ôò±£´æ½á¹û
+		//å¦‚æœåˆ†æ•°æ›´ä½ï¼Œåˆ™ä¿å­˜ç»“æœ
 		if (server_num < min_server) {
 			min_server = server_num;
 			res_servers = servers;
 			vec_flavors = new_vec_flavors;
 		}
-		//Èç¹û·ÖÊı¸ü¸ß£¬ÔòÒÔÒ»¶¨¸ÅÂÊ±£´æ½á¹û£¬·ÀÖ¹ÓÅ»¯ÏİÈë¾Ö²¿×îÓÅ½â
+		//å¦‚æœåˆ†æ•°æ›´é«˜ï¼Œåˆ™ä»¥ä¸€å®šæ¦‚ç‡ä¿å­˜ç»“æœï¼Œé˜²æ­¢ä¼˜åŒ–é™·å…¥å±€éƒ¨æœ€ä¼˜è§£
 		else {
 			if (exp((min_server - server_num) / T) > rand() / RAND_MAX) {
 				min_server = server_num;
@@ -93,14 +93,14 @@ vector<Server> put_flavors_to_servers(unordered_map<string, int> map_predict_num
 				vec_flavors = new_vec_flavors;
 			}
 		}
-		T = r * T;  //Ò»´ÎÑ­»·½áÊø£¬ÎÂ¶È½µµÍ
+		T = r * T;  //ä¸€æ¬¡å¾ªç¯ç»“æŸï¼Œæ¸©åº¦é™ä½
 	}
 	return res_servers;
 }
 
 int main() {
-	//³ÌĞòÔËÓÃÀı×Ó
-	//Ô¤²â³öÀ´µÄ¸÷ÖÖĞéÄâ»úÊıÁ¿
+	//ç¨‹åºè¿ç”¨ä¾‹å­
+	//é¢„æµ‹å‡ºæ¥çš„å„ç§è™šæ‹Ÿæœºæ•°é‡
 	unordered_map<string, int> map_predict_num_flavors;
 	map_predict_num_flavors["flavor1"] = 30;
 	map_predict_num_flavors["flavor2"] = 40;
@@ -108,7 +108,7 @@ int main() {
 	map_predict_num_flavors["flavor4"] = 10;
 	map_predict_num_flavors["flavor5"] = 25;
 
-	//¸÷ÖÖĞéÄâ»ú²ÎÊı
+	//å„ç§è™šæ‹Ÿæœºå‚æ•°
 	unordered_map<string, Flavor> map_flavor_cpu_mem;
 	map_flavor_cpu_mem["flavor1"] = Flavor("flavor1", 1, 1);
 	map_flavor_cpu_mem["flavor2"] = Flavor("flavor2", 1, 2);
@@ -116,13 +116,13 @@ int main() {
 	map_flavor_cpu_mem["flavor4"] = Flavor("flavor4", 2, 2);
 	map_flavor_cpu_mem["flavor5"] = Flavor("flavor5", 2, 4);
 
-	//·şÎñÆ÷×ÊÔ´Ïà¹ØĞÅÏ¢
+	//æœåŠ¡å™¨èµ„æºç›¸å…³ä¿¡æ¯
 	int server_cpu = 56;
 	int server_mem = 128;
 	bool CPUorMEM = CPU;
-	//µ÷ÓÃÄ£ÄâÍË»ğËã·¨ÕÒµ½×îÓÅ·ÅÖÃ·½·¨
-	vector<Server> servers = put_flavors_to_servers(map_predict_num_flavors, map_flavor_cpu_mem, server_cpu, server_mem, CPUorMEM);
-	//Êä³ö¸÷¸ö·şÎñÆ÷ÀïÃæ·Ö±ğ·ÅÖÃÁËÄÄĞ©ĞéÄâ»ú
+	//è°ƒç”¨æ¨¡æ‹Ÿé€€ç«ç®—æ³•æ‰¾åˆ°æœ€ä¼˜æ”¾ç½®æ–¹æ³•
+	vector<Server> servers = put_flavors_to_servers(map_predict_num_flavors, map_flavor_cpu_mem, server_mem, server_cpu, CPUorMEM);
+	//è¾“å‡ºå„ä¸ªæœåŠ¡å™¨é‡Œé¢åˆ†åˆ«æ”¾ç½®äº†å“ªäº›è™šæ‹Ÿæœº
 	int server_count = 1;
 	for (auto element : servers) {
 		cout << server_count++ << " ";
